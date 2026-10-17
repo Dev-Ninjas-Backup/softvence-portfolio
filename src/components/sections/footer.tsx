@@ -28,22 +28,43 @@ export function Footer() {
       id="footer"
       className="relative w-full overflow-hidden rounded-t-[30px] bg-[#161616] text-white"
     >
-      {/* High fidelity ambient glow backdrop exported directly from Figma */}
+      {/* Pure CSS atmospheric aurora lighting matching Figma ambient glow without static image duplication */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        <Image
-          src="/figma/765-6160.png"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-top opacity-95"
-        />
-        {/* Soft supplementary radial gradient for seamless transition */}
+        {/* Deep emerald radiant core glow */}
         <div
-          className="absolute inset-0"
+          className="absolute -top-[10%] left-1/2 h-[700px] w-[1400px] -translate-x-1/2 rounded-[100%]"
           style={{
             background:
-              "radial-gradient(ellipse 70% 50% at 50% 65%, rgba(0, 171, 12, 0.12) 0%, rgba(22, 22, 22, 0.4) 60%, rgba(22, 22, 22, 0.85) 100%)",
+              "radial-gradient(ellipse 60% 40% at 50% 50%, rgba(0, 171, 12, 0.16) 0%, rgba(0, 171, 12, 0.04) 55%, transparent 75%)",
+            filter: "blur(40px)",
+          }}
+        />
+
+        {/* Ambient bottom-left & bottom-right green wisps */}
+        <div
+          className="absolute -bottom-[20%] -left-[10%] h-[550px] w-[750px] rounded-[100%]"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(0, 171, 12, 0.18) 0%, rgba(0, 171, 12, 0.03) 60%, transparent 80%)",
+            filter: "blur(60px)",
+          }}
+        />
+        <div
+          className="absolute -bottom-[20%] -right-[10%] h-[550px] w-[750px] rounded-[100%]"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(0, 171, 12, 0.18) 0%, rgba(0, 171, 12, 0.03) 60%, transparent 80%)",
+            filter: "blur(60px)",
+          }}
+        />
+
+        {/* Subtle center stage backdrop glow behind SOFTVENCE */}
+        <div
+          className="absolute bottom-0 left-1/2 h-[350px] w-[1100px] -translate-x-1/2"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 50% at 50% 100%, rgba(0, 171, 12, 0.14) 0%, transparent 70%)",
+            filter: "blur(30px)",
           }}
         />
       </div>
