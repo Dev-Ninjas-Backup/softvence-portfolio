@@ -1,0 +1,16 @@
+import puppeteer from "puppeteer-core";
+const browser = await puppeteer.launch({executablePath:"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",headless:true,args:["--no-sandbox","--hide-scrollbars","--force-device-scale-factor=1"]});
+const page = await browser.newPage();
+page.on("console", m => console.log("CONSOLE", m.type(), m.text().slice(0,200)));
+page.on("pageerror", e => console.log("PAGEERROR", String(e).slice(0,300)));
+page.on("framenavigated", f => console.log("NAV", f.url().slice(0,60)));
+await page.setViewport({width:1920,height:1200,deviceScaleFactor:1});
+await page.goto("http://localhost:3000/",{waitUntil:"networkidle0",timeout:60000});
+console.log("loaded, title:", await page.title());
+const h = await page.evaluate(() => document.body.scrollHeight);
+console.log("scrollHeight", h);
+await page.evaluate(async () => { for (let y=0;y<document.body.scrollHeight;y+=600){window.scrollTo(0,y);await new Promise(r=>setTimeout(r,30));} window.scrollTo(0,0); });
+console.log("after scroll ok");
+const box = await page.evaluate(() => { const el=document.querySelector("section#services"); const r=el.getBoundingClientRect(); return {x:r.x,y:r.y+window.scrollY,w:r.width,h:r.height}; });
+console.log("box", JSON.stringify(box));
+await browser.close();
