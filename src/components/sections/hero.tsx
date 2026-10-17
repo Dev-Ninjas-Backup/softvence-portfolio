@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { ArrowUpRight } from "@/components/ui/arrow-up-right";
 import { StarIcon } from "@/components/icons/star";
@@ -16,15 +19,53 @@ const WORDMARK = [
 
 const WORDMARK_WIDTH = WORDMARK.reduce((total, letter) => total + letter.width, 0);
 
-/** Peeking hero cards, painted from the back forwards. Positions are
- * relative to the full-bleed 1920px image stage (page coordinates).
- * `fit` mirrors the Figma image scale mode: STRETCH→fill, FILL→cover. */
-const CARDS = [
-  { src: "/figma/img/765-4895.jpg", left: 1114, top: 39, width: 287, height: 379, opacity: 0.4, fit: "object-fill" },
-  { src: "/figma/img/765-4896.jpg", left: 518, top: 38, width: 292, height: 380, opacity: 0.4, fit: "object-cover" },
-  { src: "/figma/img/765-4897.jpg", left: 1009, top: 25, width: 305, height: 407, fit: "object-fill" },
-  { src: "/figma/img/765-4898.png", left: 610, top: 24, width: 313, height: 408, fit: "object-fill" },
+type HeroCardItem = {
+  id: string;
+  src: string;
+  title: string;
+  tags: string[];
+  fit?: "object-cover" | "object-fill";
+};
+
+const HERO_DECK_ITEMS: HeroCardItem[] = [
+  {
+    id: "quantumix",
+    src: "/figma/img/765-4899.jpg",
+    title: "Quantumix",
+    tags: ["Branding Identity", "Product Design"],
+    fit: "object-cover",
+  },
+  {
+    id: "card-right-1",
+    src: "/figma/img/765-4897.jpg",
+    title: "NeuraCore",
+    tags: ["Visual Identity", "UI System"],
+    fit: "object-fill",
+  },
+  {
+    id: "card-right-2",
+    src: "/figma/img/765-4895.jpg",
+    title: "Orbitek Studio",
+    tags: ["Landing Page", "Motion Art"],
+    fit: "object-fill",
+  },
+  {
+    id: "card-left-2",
+    src: "/figma/img/765-4896.jpg",
+    title: "Noventra Tech",
+    tags: ["Product Design", "App Dev"],
+    fit: "object-cover",
+  },
+  {
+    id: "card-left-1",
+    src: "/figma/img/765-4898.png",
+    title: "CyberPulse",
+    tags: ["Fintech Platform", "Web Experience"],
+    fit: "object-fill",
+  },
 ];
+
+const OFFSETS = [-3, -2, -1, 0, 1, 2, 3];
 
 const avatars = [
   "/figma/img/765-4905.png",
@@ -33,6 +74,66 @@ const avatars = [
 ];
 
 export function Hero() {
+  const [virtualIndex, setVirtualIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const dragStartX = useRef<number | null>(null);
+  const isDragging = useRef(false);
+
+  const total = HERO_DECK_ITEMS.length;
+
+  const getActiveItem = useCallback(
+    (vIndex: number) => {
+      return HERO_DECK_ITEMS[((vIndex % total) + total) % total] || HERO_DECK_ITEMS[0];
+    },
+    [total]
+  );
+
+  const handleNext = useCallback(() => {
+    setVirtualIndex((v) => v + 1);
+  }, []);
+
+  const handlePrev = useCallback(() => {
+    setVirtualIndex((v) => v - 1);
+  }, []);
+
+  // Autoplay with hover pause (3600ms)
+  useEffect(() => {
+    if (isHovered) return;
+    const interval = setInterval(() => {
+      handleNext();
+    }, 3600);
+    return () => clearInterval(interval);
+  }, [isHovered, handleNext]);
+
+  // Touch & Mouse gestures with 35px threshold
+  const handleTouchStart = (e: React.TouchEvent) => {
+    dragStartX.current = e.touches[0].clientX;
+    isDragging.current = true;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!isDragging.current || dragStartX.current === null) return;
+    const diff = dragStartX.current - e.changedTouches[0].clientX;
+    if (diff > 35) handleNext();
+    else if (diff < -35) handlePrev();
+    dragStartX.current = null;
+    isDragging.current = false;
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    dragStartX.current = e.clientX;
+    isDragging.current = true;
+  };
+
+  const handleMouseUp = (e: React.MouseEvent) => {
+    if (!isDragging.current || dragStartX.current === null) return;
+    const diff = dragStartX.current - e.clientX;
+    if (diff > 35) handleNext();
+    else if (diff < -35) handlePrev();
+    dragStartX.current = null;
+    isDragging.current = false;
+  };
+
   return (
     <section
       id="home"
@@ -47,12 +148,12 @@ export function Hero() {
             <span className="text-brand">next</span>
           </h1>
 
-          {/* Media row: wordmark behind, hero cards in front */}
-          <div className="relative h-[190px] sm:h-[250px] md:h-[320px] lg:h-[400px] xl:h-[456px]">
-            <div className="absolute top-0 left-1/2 w-[1920px] -translate-x-1/2 origin-top scale-[0.4] sm:scale-[0.53] md:scale-[0.68] lg:scale-[0.85] xl:scale-100">
-              <div className="relative h-[456px] w-[1920px]">
-                {/* Wordmark */}
-                <div className="absolute top-[101px] left-[220px] flex h-[245px] w-[1481px]">
+          {/* Media row: wordmark behind, 3D Coverflow Stacked Deck Carousel in front */}
+          <div className="relative h-[220px] sm:h-[280px] md:h-[350px] lg:h-[420px] xl:h-[470px]">
+            <div className="absolute top-0 left-1/2 w-[1920px] -translate-x-1/2 origin-top scale-[0.42] sm:scale-[0.55] md:scale-[0.7] lg:scale-[0.86] xl:scale-100">
+              <div className="relative h-[470px] w-[1920px]">
+                {/* Wordmark behind */}
+                <div className="absolute top-[101px] left-[220px] flex h-[245px] w-[1481px] pointer-events-none select-none">
                   {WORDMARK.map((letter, index) => (
                     <span
                       key={`${letter.char}-${index}`}
@@ -64,62 +165,139 @@ export function Hero() {
                   ))}
                 </div>
 
-                {/* Cards */}
-                <div className="absolute top-0 left-0 h-[456px] w-[1920px]">
-                  {CARDS.map((card) => (
-                    <div
-                      key={card.src}
-                      style={{
-                        left: card.left,
-                        top: card.top,
-                        width: card.width,
-                        height: card.height,
-                        opacity: card.opacity,
-                      }}
-                      className="absolute overflow-hidden rounded-[30px]"
-                    >
-                      <Image
-                        src={card.src}
-                        alt=""
-                        fill
-                        sizes="313px"
-                        className={card.fit}
-                      />
-                    </div>
-                  ))}
+                {/* 3D Coverflow Stacked Deck Container */}
+                <div
+                  className="absolute inset-0 cursor-grab active:cursor-grabbing select-none"
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => {
+                    setIsHovered(false);
+                    isDragging.current = false;
+                    dragStartX.current = null;
+                  }}
+                  onTouchStart={handleTouchStart}
+                  onTouchEnd={handleTouchEnd}
+                  onMouseDown={handleMouseDown}
+                  onMouseUp={handleMouseUp}
+                >
+                  {OFFSETS.map((k) => {
+                    const vIndex = virtualIndex + k;
+                    const item = getActiveItem(vIndex);
 
-                  {/* Featured card */}
-                  <div className="absolute top-0 left-[710px] h-[456px] w-[476px]">
-                    <div className="group relative h-full w-full cursor-pointer overflow-hidden rounded-[30px]">
-                      <Image
-                        src="/figma/img/765-4899.jpg"
-                        alt="Quantumix — branding identity and product design case study"
-                        fill
-                        sizes="476px"
-                        priority
-                        className="object-cover"
-                      />
+                    const isCenter = k === 0;
+                    const isImmediate = Math.abs(k) === 1;
+                    const isFar = Math.abs(k) === 2;
 
-                      {/* Figma Variant2 hover tint overlays: 20% black + 10% brand green with 2px backdrop blur */}
-                      <div className="pointer-events-none absolute inset-0 bg-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                      <div className="pointer-events-none absolute inset-0 bg-brand/10 backdrop-blur-[2px] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    let translateX = 0;
+                    let scale = 0.55;
+                    let zIndex = 0;
+                    let opacity = 0;
+                    let filter = "brightness(0.65)";
+                    let pointerEvents: "auto" | "none" = "none";
 
-                      <div className="absolute top-[366px] left-[23px] flex w-[268px] flex-col gap-[5px]">
-                        <p className="text-[24.67px] leading-[29.6px] font-bold tracking-[-0.04em] text-white">
-                          Quantumix
-                        </p>
-                        <div className="flex gap-[8px] text-[17.27px] leading-[25.9px] tracking-[-0.01em] text-white">
-                          <span>Branding Identity</span>
-                          <span>Product Design</span>
+                    if (isCenter) {
+                      translateX = 0;
+                      scale = 1;
+                      zIndex = 30;
+                      opacity = 1;
+                      filter = "brightness(1)";
+                      pointerEvents = "auto";
+                    } else if (isImmediate) {
+                      translateX = k * 185;
+                      scale = 0.84;
+                      zIndex = 20;
+                      opacity = 0.96;
+                      filter = "brightness(0.92)";
+                      pointerEvents = "auto";
+                    } else if (isFar) {
+                      translateX = (k / 2) * 350;
+                      scale = 0.70;
+                      zIndex = 10;
+                      opacity = 0.88;
+                      filter = "brightness(0.82)";
+                      pointerEvents = "auto";
+                    } else {
+                      translateX = (k > 0 ? 1 : -1) * 460;
+                      scale = 0.55;
+                      zIndex = 0;
+                      opacity = 0;
+                      filter = "brightness(0.6)";
+                      pointerEvents = "none";
+                    }
+
+                    return (
+                      <div
+                        key={vIndex}
+                        onClick={(e) => {
+                          if (k !== 0) {
+                            e.stopPropagation();
+                            setVirtualIndex((v) => v + k);
+                          }
+                        }}
+                        style={{
+                          width: "476px",
+                          height: "456px",
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          transform: `translate(-50%, -50%) translateX(${translateX}px) scale(${scale}) translateZ(0)`,
+                          zIndex,
+                          opacity,
+                          filter,
+                          pointerEvents,
+                          transition: "all 500ms cubic-bezier(0.25, 1, 0.5, 1)",
+                        }}
+                        className="origin-center cursor-pointer will-change-transform"
+                      >
+                        <div className="group relative h-full w-full overflow-hidden rounded-[30px] shadow-[0_20px_50px_rgba(0,0,0,0.18)]">
+                          <Image
+                            src={item.src}
+                            alt={item.title}
+                            fill
+                            sizes="476px"
+                            priority={isCenter}
+                            className={item.fit ?? "object-cover"}
+                          />
+
+                          {/* Hover tint overlays on center card */}
+                          <div
+                            className={`pointer-events-none absolute inset-0 bg-black/20 transition-opacity duration-300 ${
+                              isCenter ? "opacity-0 group-hover:opacity-100" : "opacity-0"
+                            }`}
+                          />
+                          <div
+                            className={`pointer-events-none absolute inset-0 bg-brand/10 backdrop-blur-[2px] transition-opacity duration-300 ${
+                              isCenter ? "opacity-0 group-hover:opacity-100" : "opacity-0"
+                            }`}
+                          />
+
+                          {/* Conditional Center Card Content: Title & Tags */}
+                          <div
+                            className={`absolute top-[366px] left-[23px] flex w-[268px] flex-col gap-[5px] transition-all duration-300 ${
+                              isCenter
+                                ? "opacity-100 translate-y-0"
+                                : "opacity-0 translate-y-3 pointer-events-none"
+                            }`}
+                          >
+                            <p className="text-[24.67px] leading-[29.6px] font-bold tracking-[-0.04em] text-white drop-shadow-md">
+                              {item.title}
+                            </p>
+                            <div className="flex gap-[8px] text-[17.27px] leading-[25.9px] tracking-[-0.01em] text-white/90 drop-shadow-sm">
+                              {item.tags.map((tag, tagIdx) => (
+                                <span key={tagIdx}>{tag}</span>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Top-Right Arrow badge for center card */}
+                          {isCenter && (
+                            <span className="absolute top-[-61px] right-[27px] flex size-14 items-center justify-center rounded-full bg-white text-brand shadow-sm transition-all duration-300 ease-out group-hover:top-[27px]">
+                              <ArrowUpRight className="size-[15px]" />
+                            </span>
+                          )}
                         </div>
                       </div>
-
-                      {/* Arrow badge: hidden above (-61px) and slides down to 27px on hover */}
-                      <span className="absolute top-[-61px] right-[27px] flex size-14 items-center justify-center rounded-full bg-white text-brand shadow-sm transition-all duration-300 ease-out group-hover:top-[27px]">
-                        <ArrowUpRight className="size-[15px]" />
-                      </span>
-                    </div>
-                  </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
