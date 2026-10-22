@@ -95,8 +95,219 @@
   animation: marquee-left 40s linear infinite;
 }
 
+@keyframes rise-blur {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise-y, 70px));
+    filter: blur(var(--rise-blur, 0px));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(var(--pop-from, 0.3));
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes rise-char {
+  from {
+    opacity: 0;
+    transform: translate3d(60px, 60px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes drift-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(96px, -38.4px, 0);
+  }
+}
+
+@keyframes drift-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-76.8px, 57.6px, 0);
+  }
+}
+
+@keyframes drift-streak {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(76.8px, 28.8px, 0);
+  }
+}
+
+@keyframes chip-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.anim-word,
+.anim-letter,
+.anim-line {
+  animation-name: rise-blur;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+}
+
+.anim-word {
+  display: inline-block;
+  --rise-y: 90px;
+  --rise-blur: 18px;
+  animation-duration: 528ms;
+}
+
+.anim-letter {
+  --rise-y: 70px;
+  animation-duration: 1000ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.anim-line {
+  display: block;
+  --rise-y: 24px;
+  --rise-blur: 8px;
+  animation-duration: 690ms;
+}
+
+.anim-line-short {
+  --rise-y: 12px;
+  --rise-blur: 0px;
+  animation-duration: 700ms;
+}
+
+.anim-pop,
+.anim-star {
+  animation-name: pop-in;
+  animation-duration: 550ms;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.45, 1.45, 0.8, 1);
+}
+
+.anim-star {
+  --pop-from: 0.2;
+  animation-duration: 400ms;
+}
+
+.rise-char {
+  display: inline-block;
+  white-space: pre;
+}
+
+.rise-char.is-armed {
+  animation: rise-char 240ms cubic-bezier(0.15, 0.19, 0.55, 1) both;
+}
+
+.drift-a {
+  animation: drift-a 9s ease-in-out infinite;
+}
+
+.drift-b {
+  animation: drift-b 9s ease-in-out infinite;
+}
+
+.drift-streak {
+  animation: drift-streak 9s ease-in-out infinite;
+}
+
+.chip-bob {
+  animation: chip-bob 4.5s ease-in-out infinite;
+}
+
+/* Hero deck entrance: center first, then each side card from a lower offset. */
+@keyframes hero-deck-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--hero-in-y, 40px)) scale(var(--hero-in-scale, 0.9));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.hero-deck-in {
+  animation-name: hero-deck-in;
+  animation-duration: var(--hero-in-dur, 680ms);
+  animation-timing-function: var(--hero-in-ease, cubic-bezier(0.22, 1, 0.36, 1));
+  animation-fill-mode: both;
+  animation-delay: var(--hero-in-delay, 0ms);
+}
+
+.hero-deck-in-center {
+  --hero-in-y: 40px;
+  --hero-in-scale: 0.88;
+  --hero-in-delay: 900ms;
+  --hero-in-dur: 800ms;
+  --hero-in-ease: cubic-bezier(0.45, 1.45, 0.8, 1);
+}
+
+.hero-deck-in-l1 {
+  --hero-in-y: 36px;
+  --hero-in-scale: 0.92;
+  --hero-in-delay: 1280ms;
+}
+
+.hero-deck-in-r1 {
+  --hero-in-y: 52px;
+  --hero-in-scale: 0.92;
+  --hero-in-delay: 1520ms;
+}
+
+.hero-deck-in-l2 {
+  --hero-in-y: 68px;
+  --hero-in-scale: 0.9;
+  --hero-in-delay: 1760ms;
+}
+
+.hero-deck-in-r2 {
+  --hero-in-y: 84px;
+  --hero-in-scale: 0.9;
+  --hero-in-delay: 2000ms;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .animate-marquee {
+  .animate-marquee,
+  .anim-word,
+  .anim-letter,
+  .anim-line,
+  .anim-line-short,
+  .anim-pop,
+  .anim-star,
+  .rise-char.is-armed,
+  .drift-a,
+  .drift-b,
+  .drift-streak,
+  .chip-bob,
+  .hero-deck-in {
     animation: none;
   }
 }

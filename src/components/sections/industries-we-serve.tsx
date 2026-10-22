@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import { CtaButton } from "@/components/ui/cta-button";
+import { Reveal } from "@/components/ui/reveal";
 
 /* ------------------------------------------------------------------ */
 /*  Industry icons — stroke-based, #4A5568, matching Figma vectors     */
@@ -180,23 +181,30 @@ export function IndustriesWeServe() {
         <div className="content-1480 flex flex-col gap-[64px]">
           {/* Header */}
           <div className="flex flex-col gap-[20px]">
-            <span className="text-[14px] leading-[20px] font-semibold tracking-[1.12px] text-[#171717] uppercase">
-              <span className="text-brand">{"//"}</span>{" "}Industries We Serve
-            </span>
-            <h2 className="max-w-[1000px] text-[56px] leading-[64px] font-bold tracking-[-1.12px] text-ink-2 uppercase">
-              Built for the World&apos;s{" "}
-              <span className="text-[#A4A7AE]">Most Demanding Industries</span>
-            </h2>
+            <Reveal y={16}>
+              <span className="text-[14px] leading-[20px] font-semibold tracking-[1.12px] text-[#171717] uppercase">
+                <span className="text-brand">{"//"}</span>{" "}Industries We Serve
+              </span>
+            </Reveal>
+            <Reveal y={26} delay={100}>
+              <h2 className="max-w-[1000px] text-[56px] leading-[64px] font-bold tracking-[-1.12px] text-ink-2 uppercase">
+                Built for the World&apos;s{" "}
+                <span className="text-[#A4A7AE]">Most Demanding Industries</span>
+              </h2>
+            </Reveal>
           </div>
 
           {/* Card grid — 3 rows x 4 columns */}
           <div className="grid grid-cols-1 gap-[24px] sm:grid-cols-2 lg:grid-cols-4">
-            {INDUSTRIES.map((industry) => (
-              <IndustryCard key={industry.title} industry={industry} />
+            {INDUSTRIES.map((industry, index) => (
+              <Reveal key={industry.title} y={32} delay={400 + index * 90}>
+                <IndustryCard industry={industry} />
+              </Reveal>
             ))}
           </div>
 
           {/* Bottom CTA banner */}
+          <Reveal y={30} delay={1200}>
           <div className="flex h-auto w-full flex-col items-start justify-between gap-[24px] rounded-[24px] border border-line bg-white px-[32px] py-[32px] shadow-[0_1px_2px_rgba(15,26,15,0.04),0_16px_40px_-8px_rgba(15,26,15,0.06)] sm:h-[178px] sm:flex-row sm:items-center sm:px-[29px]">
             <div className="flex flex-col">
               <h3 className="text-[40px] leading-[60px] font-medium tracking-[-0.01em] text-ink-2 uppercase">
@@ -208,6 +216,7 @@ export function IndustriesWeServe() {
             </div>
             <CtaButton href="#contact">Talk to Our Experts</CtaButton>
           </div>
+          </Reveal>
         </div>
       </div>
     </section>
