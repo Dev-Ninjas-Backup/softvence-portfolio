@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { CtaButton } from "@/components/ui/cta-button";
+import { Globe } from "@/components/ui/globe";
 
 const AVATARS = [
   { src: "/figma/765-4933.png", left: 23 },
@@ -94,8 +95,41 @@ export function FeaturedWork() {
 
             {/* Column 2 */}
             <div className="flex w-[467px] shrink-0 flex-col gap-[13px]">
-              <div className={`relative h-[509px] w-[467px] overflow-hidden ${CARD_BORDER}`}>
-                <Image src="/figma/765-4951.png" alt="" fill sizes="467px" className="object-fill" />
+              <div
+                className={`relative h-[509px] w-[467px] overflow-hidden bg-[#f7f7f7] ${CARD_BORDER}`}
+                style={{
+                  backgroundImage:
+                    "linear-gradient(to right, rgba(23,23,23,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(23,23,23,0.06) 1px, transparent 1px)",
+                  backgroundSize: "46px 46px",
+                }}
+              >
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    maskImage:
+                      "linear-gradient(90deg, #000 0%, #000 64%, rgba(0,0,0,0.72) 84%, transparent 100%)",
+                    WebkitMaskImage:
+                      "linear-gradient(90deg, #000 0%, #000 64%, rgba(0,0,0,0.72) 84%, transparent 100%)",
+                  }}
+                >
+                  <Globe
+                    className="h-full min-h-0"
+                    phi={4.4}
+                    theta={0.2}
+                    dark={0}
+                    scale={1.02}
+                    diffuse={0.9}
+                    mapSamples={22000}
+                    mapBrightness={11}
+                    baseColor="#d5d5d5"
+                    markerColor="#bdbdbd"
+                    glowColor="#ececec"
+                    opacity={0.55}
+                    enableZoom={false}
+                    autoRotate
+                    autoRotateSpeed={0.003}
+                  />
+                </div>
               </div>
 
               <div className={`relative h-[122px] w-[467px] bg-brand ${CARD_BORDER}`}>
