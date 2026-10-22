@@ -242,56 +242,80 @@
   animation: chip-bob 4.5s ease-in-out infinite;
 }
 
-/* Hero deck entrance: center first, then each side card from a lower offset. */
-@keyframes hero-deck-in {
+/* Hero deck entrance (spread-v2). Center lands first. Side cards then leave
+   from behind it: left cards travel left, right cards travel right.
+   `--hero-from-x` cancels the parent slot offset, so each card starts centered. */
+@keyframes hero-deck-center {
   from {
     opacity: 0;
-    transform: translateY(var(--hero-in-y, 40px)) scale(var(--hero-in-scale, 0.9));
+    transform: scale(0.9);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: scale(1);
+  }
+}
+
+@keyframes hero-deck-spread {
+  0% {
+    opacity: 0;
+    transform: translateX(var(--hero-from-x, 0px)) scale(var(--hero-from-scale, 1.06));
+  }
+  42% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
   }
 }
 
 .hero-deck-in {
-  animation-name: hero-deck-in;
-  animation-duration: var(--hero-in-dur, 680ms);
-  animation-timing-function: var(--hero-in-ease, cubic-bezier(0.22, 1, 0.36, 1));
   animation-fill-mode: both;
-  animation-delay: var(--hero-in-delay, 0ms);
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hero-deck-in-center {
-  --hero-in-y: 40px;
-  --hero-in-scale: 0.88;
-  --hero-in-delay: 900ms;
-  --hero-in-dur: 800ms;
-  --hero-in-ease: cubic-bezier(0.45, 1.45, 0.8, 1);
+  animation-name: hero-deck-center;
+  animation-duration: 680ms;
+  animation-delay: 240ms;
+}
+
+.hero-deck-in-l1,
+.hero-deck-in-r1,
+.hero-deck-in-l2,
+.hero-deck-in-r2 {
+  animation-name: hero-deck-spread;
+}
+
+.hero-deck-in-l1,
+.hero-deck-in-r1 {
+  animation-duration: 740ms;
+  animation-delay: 820ms;
+  --hero-from-scale: 1.056;
 }
 
 .hero-deck-in-l1 {
-  --hero-in-y: 36px;
-  --hero-in-scale: 0.92;
-  --hero-in-delay: 1280ms;
+  --hero-from-x: 220px;
 }
 
 .hero-deck-in-r1 {
-  --hero-in-y: 52px;
-  --hero-in-scale: 0.92;
-  --hero-in-delay: 1520ms;
+  --hero-from-x: -220px;
+}
+
+.hero-deck-in-l2,
+.hero-deck-in-r2 {
+  animation-duration: 800ms;
+  animation-delay: 1180ms;
+  --hero-from-scale: 1.133;
 }
 
 .hero-deck-in-l2 {
-  --hero-in-y: 68px;
-  --hero-in-scale: 0.9;
-  --hero-in-delay: 1760ms;
+  --hero-from-x: 359px;
 }
 
 .hero-deck-in-r2 {
-  --hero-in-y: 84px;
-  --hero-in-scale: 0.9;
-  --hero-in-delay: 2000ms;
+  --hero-from-x: -359px;
 }
 
 @media (prefers-reduced-motion: reduce) {

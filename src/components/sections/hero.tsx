@@ -67,7 +67,7 @@ const HERO_DECK_ITEMS: HeroCardItem[] = [
 
 const OFFSETS = [-3, -2, -1, 0, 1, 2, 3];
 
-/** One-shot entrance. Center lands first; side cards follow, each from lower. */
+/** One-shot entrance. Center lands first; side cards then leave from behind it. */
 const INTRO_CLASS: Record<number, string> = {
   0: "hero-deck-in hero-deck-in-center",
   [-1]: "hero-deck-in hero-deck-in-l1",
@@ -120,6 +120,15 @@ const avatars = [
   "/figma/img/765-4905.png",
   "/figma/img/765-4906.png",
   "/figma/img/765-4907.png",
+];
+
+/** Frame 1 on the landing page: a 28px column, 14px apart, left at x=100. */
+const HERO_SOCIAL = [
+  { label: "Facebook", href: "https://facebook.com", src: "/figma/890-6689.svg" },
+  { label: "LinkedIn", href: "https://linkedin.com", src: "/figma/890-6692.svg" },
+  { label: "Dribbble", href: "https://dribbble.com", src: "/figma/890-6697.svg" },
+  { label: "Behance", href: "https://www.behance.net", src: "/figma/890-6700.svg" },
+  { label: "Website", href: "/", src: "/figma/890-6706.svg" },
 ];
 
 export function Hero() {
@@ -358,6 +367,27 @@ export function Hero() {
                 </div>
               </div>
             </div>
+
+            {/* Frame 1. The stack's bottom edge sits on the card center.
+                On the 1920 frame its left edge is 100px; below that it stays
+                16px inside the viewport. */}
+            <nav
+              aria-label="Social"
+              className="absolute bottom-1/2 left-[max(calc(50%-50vw+16px),calc(50%-860px))] z-40 hidden w-7 flex-col gap-[14px] xl:flex"
+            >
+              {HERO_SOCIAL.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target={item.href.startsWith("http") ? "_blank" : undefined}
+                  rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+                  aria-label={item.label}
+                  className="block h-7 w-7 transition-opacity duration-200 hover:opacity-60"
+                >
+                  <img src={item.src} alt="" width={28} height={28} className="h-7 w-7" />
+                </a>
+              ))}
+            </nav>
           </div>
 
           {/* Tagline + social proof */}
