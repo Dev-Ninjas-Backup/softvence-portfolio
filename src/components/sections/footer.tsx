@@ -1,6 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { Globe, type GlobeMarker } from "@/components/ui/globe";
+
+const GLOBE_MARKERS: GlobeMarker[] = [
+  { location: [23.8103, 90.4125], size: 0.06 },
+  { location: [51.5074, -0.1278], size: 0.045 },
+  { location: [40.7128, -74.006], size: 0.045 },
+  { location: [25.2048, 55.2708], size: 0.04 },
+  { location: [1.3521, 103.8198], size: 0.04 },
+];
 
 type FooterPill = {
   label: string;
@@ -14,7 +23,7 @@ const PILLS: FooterPill[] = [
   { label: "Instagram", href: "https://instagram.com", rotation: "-rotate-[12.5deg] hover:rotate-0" },
   { label: "WordPress", href: "#services", rotation: "rotate-[11.7deg] hover:rotate-6" },
   { label: "Shopify", href: "#services", rotation: "-rotate-[30deg] hover:-rotate-12" },
-  { label: "App Development ", href: "#services", rotation: "rotate-[15deg] hover:rotate-0" },
+  { label: "App Development", href: "#services", rotation: "rotate-[15deg] hover:rotate-0" },
 ];
 
 export function Footer() {
@@ -29,33 +38,59 @@ export function Footer() {
     >
       {/* Pure CSS atmospheric aurora lighting matching Figma ambient glow without static image duplication */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+        <div className="pointer-events-auto absolute top-[-8%] left-1/2 h-[920px] w-[min(1040px,92vw)] -translate-x-1/2">
+          <Globe
+            className="h-full min-h-0"
+            phi={1.7}
+            theta={0.28}
+            dark={1}
+            scale={1.05}
+            diffuse={1.7}
+            mapSamples={16000}
+            mapBrightness={8}
+            baseColor="#07140c"
+            markerColor="#5dff62"
+            glowColor="#0e4d1c"
+            markers={GLOBE_MARKERS}
+            enableZoom={false}
+            autoRotate
+            autoRotateSpeed={0.004}
+          />
+        </div>
+
         {/* Deep emerald radiant core glow */}
-        <div
-          className="absolute -top-[10%] left-1/2 h-[700px] w-[1400px] -translate-x-1/2 rounded-[100%]"
-          style={{
-            background:
-              "radial-gradient(ellipse 60% 40% at 50% 50%, rgba(0, 171, 12, 0.16) 0%, rgba(0, 171, 12, 0.04) 55%, transparent 75%)",
-            filter: "blur(40px)",
-          }}
-        />
+        <div className="absolute -top-[10%] left-1/2 h-[700px] w-[1400px] -translate-x-1/2">
+          <div
+            className="drift-a h-full w-full rounded-[100%]"
+            style={{
+              background:
+                "radial-gradient(ellipse 60% 40% at 50% 50%, rgba(0, 171, 12, 0.08) 0%, rgba(0, 171, 12, 0.02) 55%, transparent 75%)",
+              filter: "blur(40px)",
+            }}
+          />
+        </div>
 
         {/* Ambient bottom-left & bottom-right green wisps */}
-        <div
-          className="absolute -bottom-[20%] -left-[10%] h-[550px] w-[750px] rounded-[100%]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(0, 171, 12, 0.18) 0%, rgba(0, 171, 12, 0.03) 60%, transparent 80%)",
-            filter: "blur(60px)",
-          }}
-        />
-        <div
-          className="absolute -bottom-[20%] -right-[10%] h-[550px] w-[750px] rounded-[100%]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(0, 171, 12, 0.18) 0%, rgba(0, 171, 12, 0.03) 60%, transparent 80%)",
-            filter: "blur(60px)",
-          }}
-        />
+        <div className="absolute -bottom-[20%] -left-[10%] h-[550px] w-[750px]">
+          <div
+            className="drift-b h-full w-full rounded-[100%]"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(0, 171, 12, 0.18) 0%, rgba(0, 171, 12, 0.03) 60%, transparent 80%)",
+              filter: "blur(60px)",
+            }}
+          />
+        </div>
+        <div className="absolute -bottom-[20%] -right-[10%] h-[550px] w-[750px]">
+          <div
+            className="drift-streak h-full w-full rounded-[100%]"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(0, 171, 12, 0.18) 0%, rgba(0, 171, 12, 0.03) 60%, transparent 80%)",
+              filter: "blur(60px)",
+            }}
+          />
+        </div>
 
         {/* Subtle center stage backdrop glow behind SOFTVENCE */}
         <div
@@ -68,10 +103,10 @@ export function Footer() {
         />
       </div>
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1920px] flex-col justify-between px-6 pt-[100px] sm:px-12 lg:px-[140px] lg:pt-[144px] 2xl:px-[295px]">
+      <div className="pointer-events-none relative z-10 mx-auto flex w-full max-w-[1920px] flex-col justify-between px-6 pt-[100px] sm:px-12 lg:px-[140px] lg:pt-[144px] 2xl:px-[295px]">
         <div className="flex flex-col gap-[52px]">
           {/* Top Row: Social Icons (Left) + Contact Details (Right) */}
-          <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
+          <div className="pointer-events-auto flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
             {/* Social Circle Links */}
             <div className="flex items-center gap-[12px]">
               <a
@@ -146,7 +181,7 @@ export function Footer() {
           </div>
 
           {/* Frosted Glass Middle Bar (Back to Top + Copyright) */}
-          <div className="flex min-h-[88px] w-full flex-col items-center justify-between gap-6 rounded-[20px] border border-white/16 bg-white/[0.08] px-[32px] py-[24px] backdrop-blur-[15px] sm:flex-row sm:px-[40px]">
+          <div className="pointer-events-auto flex min-h-[88px] w-full flex-col items-center justify-between gap-6 rounded-[20px] border border-white/16 bg-white/[0.08] px-[32px] py-[24px] backdrop-blur-[15px] sm:flex-row sm:px-[40px]">
             {/* Back to top button */}
             <button
               type="button"
@@ -200,7 +235,7 @@ export function Footer() {
         </div>
 
         {/* Stage: Floating Interactive Service Pills above Big Wordmark */}
-        <div className="relative mt-[56px] h-[330px] w-full overflow-hidden">
+        <div className="relative mt-2 h-[378px] w-full overflow-hidden">
           {/* Big SOFTVENCE Wordmark with Green 'T' and Figma gradient */}
           <div className="pointer-events-none absolute bottom-0 left-1/2 w-full -translate-x-1/2 text-center select-none">
             <span
@@ -226,15 +261,20 @@ export function Footer() {
           </div>
 
           {/* Dynamic Floating Glass Pills matching exact Figma chip titles */}
-          <div className="relative z-10 mx-auto flex max-w-[1480px] flex-wrap items-center justify-center gap-3 pt-3 sm:gap-5 sm:pt-6 lg:gap-7">
+          <div className="pointer-events-auto relative z-10 flex w-full flex-nowrap items-center justify-center gap-x-[clamp(8px,1vw,18px)] pt-[60px] sm:pt-[72px]">
             {PILLS.map((pill, i) => (
-              <a
+              <span
                 key={`${pill.label}-${i}`}
-                href={pill.href}
-                className={`inline-flex items-center justify-center rounded-[60px] border border-white/16 bg-white/[0.08] px-[36px] py-[18px] text-[18px] font-medium leading-[28px] text-white shadow-lg backdrop-blur-[15px] transition-all duration-300 hover:scale-105 hover:border-[#3FD14B] hover:bg-[#00AB0C]/20 hover:text-[#3FD14B] sm:px-[44px] sm:py-[23px] sm:text-[22px] sm:leading-[32px] ${pill.rotation}`}
+                className="chip-bob inline-flex shrink-0"
+                style={{ animationDelay: `${i * 0.35}s` }}
               >
-                {pill.label}
-              </a>
+                <a
+                  href={pill.href}
+                  className={`inline-flex items-center justify-center whitespace-nowrap rounded-[60px] border border-white/16 bg-white/[0.08] px-[clamp(16px,1.7vw,32px)] py-[clamp(14px,1.2vw,22px)] text-[clamp(14px,1.15vw,22px)] font-medium leading-none text-white shadow-lg backdrop-blur-[15px] transition-all duration-300 hover:scale-105 hover:border-[#3FD14B] hover:bg-[#00AB0C]/20 hover:text-[#3FD14B] ${pill.rotation}`}
+                >
+                  {pill.label}
+                </a>
+              </span>
             ))}
           </div>
         </div>

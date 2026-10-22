@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ArrowUpRight } from "@/components/ui/arrow-up-right";
+import { RiseText } from "@/components/ui/rise-text";
 
 type Service = {
   num: string;
@@ -227,10 +228,13 @@ export function Services() {
             <span className="text-brand">{"//"}</span>{"  Services"}
           </p>
           {/* Second line is tinted #a4a7ae via a per-character fill override. */}
-          <h2 className="max-w-[1040px] text-[56px] leading-[64px] font-bold tracking-[-0.02em] text-gray-900 uppercase">
-            Transforming bold ideas into{" "}
-            <span className="text-[#a4a7ae]">exceptional digital products</span>
-          </h2>
+          <RiseText
+            className="max-w-[1040px] text-[56px] leading-[64px] font-bold tracking-[-0.02em] text-gray-900 uppercase"
+            parts={[
+              { text: "Transforming bold ideas into " },
+              { text: "exceptional digital products", className: "text-[#a4a7ae]" },
+            ]}
+          />
         </header>
 
         {SERVICES.map((service) => (
