@@ -76,7 +76,7 @@ const INTRO_CLASS: Record<number, string> = {
   2: "hero-deck-in hero-deck-in-r2",
 };
 
-const SLOT_STEP = 185;
+const SLOT_STEP = 196;
 
 type DeckSlot = {
   x: number;
@@ -88,9 +88,9 @@ type DeckSlot = {
 
 const SLOT_STOPS = [
   { d: 0, x: 0, scale: 1, opacity: 1, brightness: 1, z: 30 },
-  { d: 1, x: 185, scale: 0.84, opacity: 0.96, brightness: 0.92, z: 20 },
-  { d: 2, x: 350, scale: 0.7, opacity: 0.88, brightness: 0.82, z: 10 },
-  { d: 3, x: 460, scale: 0.55, opacity: 0, brightness: 0.6, z: 0 },
+  { d: 1, x: 196, scale: 0.89, opacity: 1, brightness: 1, z: 20 },
+  { d: 2, x: 298, scale: 0.83, opacity: 0.5, brightness: 1, z: 10 },
+  { d: 3, x: 430, scale: 0.7, opacity: 0, brightness: 1, z: 0 },
 ];
 
 function lerp(from: number, to: number, t: number) {
@@ -296,7 +296,7 @@ export function Hero() {
                           left: "50%",
                           transform: `translate(-50%, -50%) translateX(${pose.x}px) scale(${pose.scale}) translateZ(0)`,
                           zIndex: pose.z,
-                          opacity: introClass ? 1 : pose.opacity,
+                          opacity: pose.opacity,
                           filter: `brightness(${pose.brightness})`,
                           pointerEvents: pose.opacity < 0.2 ? "none" : "auto",
                           transition: isDragging
@@ -306,54 +306,51 @@ export function Hero() {
                         className="origin-center cursor-pointer will-change-transform"
                       >
                         <div className={`h-full w-full ${introClass ?? ""}`}>
-                        <div className="group relative h-full w-full overflow-hidden rounded-[30px] shadow-[0_20px_50px_rgba(0,0,0,0.18)]">
-                          <Image
-                            src={item.src}
-                            alt={item.title}
-                            fill
-                            sizes="476px"
-                            priority={Math.abs(k) <= 2}
-                            draggable={false}
-                            className={item.fit ?? "object-cover"}
-                          />
+                          <div className="group relative h-full w-full overflow-hidden rounded-[30px] shadow-[0_20px_50px_rgba(0,0,0,0.18)]">
+                            <Image
+                              src={item.src}
+                              alt={item.title}
+                              fill
+                              sizes="476px"
+                              priority={Math.abs(k) <= 2}
+                              draggable={false}
+                              className={item.fit ?? "object-cover"}
+                            />
 
-                          {/* Hover tint overlays on center card */}
-                          <div
-                            className={`pointer-events-none absolute inset-0 bg-black/20 transition-opacity duration-300 ${
-                              focused ? "opacity-0 group-hover:opacity-100" : "opacity-0"
-                            }`}
-                          />
-                          <div
-                            className={`pointer-events-none absolute inset-0 bg-brand/10 backdrop-blur-[2px] transition-opacity duration-300 ${
-                              focused ? "opacity-0 group-hover:opacity-100" : "opacity-0"
-                            }`}
-                          />
+                            {/* Hover tint overlays on center card */}
+                            <div
+                              className={`pointer-events-none absolute inset-0 bg-black/20 transition-opacity duration-300 ${focused ? "opacity-0 group-hover:opacity-100" : "opacity-0"
+                                }`}
+                            />
+                            <div
+                              className={`pointer-events-none absolute inset-0 bg-brand/10 backdrop-blur-[2px] transition-opacity duration-300 ${focused ? "opacity-0 group-hover:opacity-100" : "opacity-0"
+                                }`}
+                            />
 
-                          {/* Conditional Center Card Content: Title & Tags */}
-                          <div
-                            className={`absolute top-[366px] left-[23px] flex w-[268px] flex-col gap-[5px] transition-all duration-300 ${
-                              focused
-                                ? "opacity-100 translate-y-0"
-                                : "opacity-0 translate-y-3 pointer-events-none"
-                            }`}
-                          >
-                            <p className="text-[24.67px] leading-[29.6px] font-bold tracking-[-0.04em] text-white drop-shadow-md">
-                              {item.title}
-                            </p>
-                            <div className="flex gap-[8px] text-[17.27px] leading-[25.9px] tracking-[-0.01em] text-white/90 drop-shadow-sm">
-                              {item.tags.map((tag, tagIdx) => (
-                                <span key={tagIdx}>{tag}</span>
-                              ))}
+                            {/* Conditional Center Card Content: Title & Tags */}
+                            <div
+                              className={`absolute top-[366px] left-[23px] flex w-[268px] flex-col gap-[5px] transition-all duration-300 ${focused
+                                  ? "opacity-100 translate-y-0"
+                                  : "opacity-0 translate-y-3 pointer-events-none"
+                                }`}
+                            >
+                              <p className="text-[24.67px] leading-[29.6px] font-bold tracking-[-0.04em] text-white drop-shadow-md">
+                                {item.title}
+                              </p>
+                              <div className="flex gap-[8px] text-[17.27px] leading-[25.9px] tracking-[-0.01em] text-white/90 drop-shadow-sm">
+                                {item.tags.map((tag, tagIdx) => (
+                                  <span key={tagIdx}>{tag}</span>
+                                ))}
+                              </div>
                             </div>
-                          </div>
 
-                          {/* Top-Right Arrow badge for center card */}
-                          {focused && (
-                            <span className="absolute top-[-61px] right-[27px] flex size-14 items-center justify-center rounded-full bg-white text-brand shadow-sm transition-all duration-300 ease-out group-hover:top-[27px]">
-                              <ArrowUpRight className="size-[15px]" />
-                            </span>
-                          )}
-                        </div>
+                            {/* Top-Right Arrow badge for center card */}
+                            {focused && (
+                              <span className="absolute top-[-61px] right-[27px] flex size-14 items-center justify-center rounded-full bg-white text-brand shadow-sm transition-all duration-300 ease-out group-hover:top-[27px]">
+                                <ArrowUpRight className="size-[15px]" />
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     );
