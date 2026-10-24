@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   devIndicators: false,
+  experimental: {
+    agentUpgrade: "security",
+  },
   images: {
     // Set NEXT_IMAGE_UNOPTIMIZED=1 to render source assets byte-for-byte,
     // which keeps screenshot diffing free of codec noise.
