@@ -1,5 +1,9 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 import { CtaButton } from "@/components/ui/cta-button";
+import { ProjectDetailsModal } from "@/components/ui/project-details-modal";
 
 type Project = {
   id: string;
@@ -49,12 +53,18 @@ const ROW_TWO: Project[] = [
   },
 ];
 
-function ProjectCard({ project }: { project: Project }) {
+function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void }) {
   const width = project.wide
     ? "w-full lg:w-[807px] lg:max-w-[57%]"
     : "w-full lg:w-[614px] lg:max-w-[43%]";
   return (
-    <article className={`group flex ${width} flex-1 cursor-pointer flex-col pb-px`}>
+    <article className={`group relative flex ${width} flex-1 cursor-pointer flex-col pb-px`}>
+      <button
+        type="button"
+        onClick={onOpen}
+        aria-label={`View ${project.title} project details`}
+        className="absolute inset-0 z-10 cursor-pointer rounded-[24.67px]"
+      />
       <div className="relative h-[360px] w-full overflow-hidden rounded-[24.67px] sm:h-[450px] lg:h-[539px]">
         <Image
           src={project.image}
@@ -82,6 +92,8 @@ function ProjectCard({ project }: { project: Project }) {
 }
 
 export function CreativeWork() {
+  const [detailsOpen, setDetailsOpen] = useState(false);
+
   return (
     <section id="creative-work" className="overflow-hidden bg-white py-[80px] lg:py-[112px]">
       <div className="page-container">
@@ -102,17 +114,18 @@ export function CreativeWork() {
           <div className="flex w-full flex-col gap-[59px]">
             <div className="flex w-full flex-col gap-[59px] lg:flex-row">
               {ROW_ONE.map((p) => (
-                <ProjectCard key={p.id} project={p} />
+                <ProjectCard key={p.id} project={p} onOpen={() => setDetailsOpen(true)} />
               ))}
             </div>
             <div className="flex w-full flex-col gap-[59px] lg:flex-row">
               {ROW_TWO.map((p) => (
-                <ProjectCard key={p.id} project={p} />
+                <ProjectCard key={p.id} project={p} onOpen={() => setDetailsOpen(true)} />
               ))}
             </div>
           </div>
         </div>
       </div>
+      {detailsOpen ? <ProjectDetailsModal onClose={() => setDetailsOpen(false)} /> : null}
     </section>
   );
 }
