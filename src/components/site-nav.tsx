@@ -1,20 +1,23 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { CtaButton } from "@/components/ui/cta-button";
 
 const NAV_ITEMS = [
-  { label: "Home", href: "#home", active: true },
-  { label: "About", href: "#about", active: false },
-  { label: "Service", href: "#services", active: false },
-  { label: "Case Study", href: "#case-study", active: false },
-  { label: "Project", href: "#projects", active: false },
-  { label: "Career", href: "#career", active: false },
+  { label: "Home", href: "/", match: "/" },
+  { label: "About", href: "/about", match: "/about" },
+  { label: "Service", href: "/#services" },
+  { label: "Case Study", href: "/#case-study" },
+  { label: "Project", href: "/#projects" },
+  { label: "Career", href: "/#career" },
 ];
 
 export function SiteNav() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
 
   return (
     <header className="absolute inset-x-0 top-[30px] z-50">
@@ -23,7 +26,7 @@ export function SiteNav() {
           {/* Brand — Figma: 174x49 box at x16, ink 172x28 (Manrope 500 37px/-0.48).
               Per-character fills: "Sof" #242424, "t" #02830b, "vence" #242424. */}
           <Link
-            href="#home"
+            href="/"
             className="text-[37px] leading-[49px] font-medium tracking-[-0.48px] text-[#242424]"
           >
             Sof<span className="text-[#02830b]">t</span>vence
@@ -31,26 +34,23 @@ export function SiteNav() {
 
           {/* Desktop navigation */}
           <nav className="hidden items-center rounded-full bg-[#9f9f9f]/8 xl:flex">
-            {NAV_ITEMS.map((item) =>
-              item.active ? (
+            {NAV_ITEMS.map((item) => {
+              const active = "match" in item && pathname === item.match;
+              return (
                 <Link
                   key={item.label}
                   href={item.href}
-                  aria-current="page"
-                  className="flex h-14 items-center justify-center rounded-full bg-brand-deep px-8 text-[16px] leading-6 font-medium text-white"
+                  aria-current={active ? "page" : undefined}
+                  className={
+                    active
+                      ? "flex h-14 items-center justify-center rounded-full bg-brand-deep px-8 text-[16px] leading-6 font-medium text-white"
+                      : "flex h-14 items-center justify-center rounded-full px-8 text-[16px] leading-6 text-ink-2 transition-colors duration-200 hover:text-brand"
+                  }
                 >
                   {item.label}
                 </Link>
-              ) : (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="flex h-14 items-center justify-center rounded-full px-8 text-[16px] leading-6 text-ink-2 transition-colors duration-200 hover:text-brand"
-                >
-                  {item.label}
-                </Link>
-              ),
-            )}
+              );
+            })}
           </nav>
 
           <div className="flex items-center gap-4">
@@ -89,20 +89,23 @@ export function SiteNav() {
         {/* Mobile drawer */}
         {open ? (
           <nav className="content-1480 mt-3 flex flex-col gap-1 rounded-[28px] bg-white/90 p-3 backdrop-blur-xl xl:hidden">
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className={`flex h-12 items-center rounded-full px-6 text-[16px] leading-6 ${
-                  item.active
-                    ? "bg-brand-deep font-medium text-white"
-                    : "text-ink-2"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              const active = "match" in item && pathname === item.match;
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className={`flex h-12 items-center rounded-full px-6 text-[16px] leading-6 ${
+                    active
+                      ? "bg-brand-deep font-medium text-white"
+                      : "text-ink-2"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
         ) : null}
       </div>
