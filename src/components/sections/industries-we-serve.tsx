@@ -158,7 +158,7 @@ function IndustryCard({ industry }: { industry: Industry }) {
   const { Icon, title, desc } = industry;
 
   return (
-    <article className="group flex h-[232px] w-full flex-col rounded-[24px] border border-line bg-white p-[32px] shadow-[0_1px_2px_rgba(15,26,15,0.04),0_16px_40px_-8px_rgba(15,26,15,0.06)] transition-shadow duration-300 hover:shadow-[0_1px_2px_rgba(15,26,15,0.04),0_20px_48px_-8px_rgba(15,26,15,0.1)]">
+    <article className="group flex h-[232px] w-full flex-col rounded-[24px] border border-line bg-white p-[32px] shadow-[0_1px_2px_rgba(15,26,15,0.04),0_16px_40px_-8px_rgba(15,26,15,0.06)] transition-[border-color,box-shadow] duration-300 hover:border-[#BFE5C2] hover:shadow-[0_1px_2px_rgba(15,26,15,0.04),0_20px_48px_-8px_rgba(15,26,15,0.1)]">
       <div className="flex size-[59px] items-center justify-center rounded-[16px] bg-[#F1F3F7] transition-colors duration-300 group-hover:bg-[#E8F5E9]">
         <Icon className="size-[29px] text-[#4A5568] transition-colors duration-300 group-hover:text-brand" />
       </div>

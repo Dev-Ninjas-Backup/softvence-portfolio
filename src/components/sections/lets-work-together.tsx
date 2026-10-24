@@ -71,7 +71,7 @@ export function LetsWorkTogether() {
                 className="group relative flex h-[300px] flex-col justify-end rounded-[24px] border-t border-l border-[rgba(23,23,23,0.08)] p-[32px] transition-all duration-300 hover:shadow-[0_16px_40px_-8px_rgba(15,26,15,0.08)]"
                 style={{
                   background:
-                    "linear-gradient(180deg, rgba(187, 242, 191, 0) 0%, rgba(255, 255, 255, 1) 71%)",
+                    "linear-gradient(180deg, #F1FCF3 0%, #F5FDF6 36%, #FAFEFA 58%, #FFFFFF 72%)",
                 }}
               >
                 {/* Top-Right Badge indicator pill (15.16px x 16px with 3px green border & rounded-[16px]) */}

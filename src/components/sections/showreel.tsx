@@ -78,6 +78,85 @@ function showreelFrame(viewportWidth: number, viewportHeight: number, progress: 
   };
 }
 
+function pageGutter(viewportWidth: number) {
+  if (viewportWidth >= 1920) return (viewportWidth - 1920) / 2 + 220;
+  if (viewportWidth >= 1024) return 40;
+  return 20;
+}
+
+function ProjectStrip() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [motionless, setMotionless] = useState(false);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    const row = rowRef.current;
+    if (!track || !row) return;
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      const gutter = `${pageGutter(document.documentElement.clientWidth)}px`;
+      row.style.paddingLeft = gutter;
+      row.style.paddingRight = gutter;
+      setMotionless(true);
+      return;
+    }
+
+    let raf = 0;
+    let lastSpan = -1;
+
+    const update = () => {
+      const viewWidth = document.documentElement.clientWidth;
+      const gutter = `${pageGutter(viewWidth)}px`;
+      if (row.style.paddingLeft !== gutter) {
+        row.style.paddingLeft = gutter;
+        row.style.paddingRight = gutter;
+      }
+      const maxShift = Math.max(0, row.scrollWidth - viewWidth);
+      const span = window.innerHeight + maxShift;
+      if (span !== lastSpan) {
+        track.style.height = `${span}px`;
+        lastSpan = span;
+      }
+      const progress = maxShift === 0 ? 0 : clamp(-track.getBoundingClientRect().top / maxShift, 0, 1);
+      row.style.transform = `translate3d(${-maxShift * progress}px,0,0)`;
+    };
+
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  return (
+    <div ref={trackRef} className="relative mt-[88px]">
+      <div
+        className={
+          motionless
+            ? "overflow-x-auto"
+            : "sticky top-0 flex h-[100svh] items-center overflow-x-clip"
+        }
+      >
+        <div ref={rowRef} className="flex w-max gap-[32px] will-change-transform">
+          {CARD_IMAGES.map((src) => (
+            <ProjectCard key={src} src={src} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ShowreelTitle() {
   const trackRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -194,17 +273,7 @@ export function Showreel() {
     <section id="projects" className="bg-surface pb-[140px]">
       <div className="flex flex-col">
         <ShowreelTitle />
-
-        {/* Project cards strip */}
-        <div className="relative mt-[88px] w-full overflow-hidden">
-          <div className="page-container">
-            <div className="flex w-max gap-[32px]">
-              {CARD_IMAGES.map((src) => (
-                <ProjectCard key={src} src={src} />
-              ))}
-            </div>
-          </div>
-        </div>
+        <ProjectStrip />
       </div>
     </section>
   );

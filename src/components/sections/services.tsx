@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef } from "react";
 import { ArrowUpRight } from "@/components/ui/arrow-up-right";
 import { RiseText } from "@/components/ui/rise-text";
 
@@ -218,7 +221,44 @@ function ServiceCard({ service }: { service: Service }) {
   );
 }
 
+const STACK_STEP = 12;
+
 export function Services() {
+  const stackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const stack = stackRef.current;
+    if (!stack) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const cards = [...stack.querySelectorAll<HTMLElement>("[data-stack-card]")];
+    let raf = 0;
+
+    const update = () => {
+      for (let i = 0; i < cards.length - 1; i++) {
+        const card = cards[i];
+        const next = cards[i + 1];
+        const gap = next.getBoundingClientRect().top - card.getBoundingClientRect().top;
+        const covered = Math.min(1, Math.max(0, 1 - gap / card.offsetHeight));
+        card.style.transform = `scale(${1 - covered * 0.045})`;
+      }
+    };
+
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
   return (
     <section id="services" className="bg-white py-[140px]">
       <div className="flex flex-col gap-[40px]">
@@ -237,9 +277,19 @@ export function Services() {
           />
         </header>
 
-        {SERVICES.map((service) => (
-          <ServiceCard key={service.num} service={service} />
-        ))}
+        <div ref={stackRef} className="flex flex-col gap-[40px]">
+          {SERVICES.map((service, index) => (
+            <div
+              key={service.num}
+              className="sticky motion-reduce:static"
+              style={{ top: 20 + index * STACK_STEP, zIndex: index + 1 }}
+            >
+              <div data-stack-card className="origin-top">
+                <ServiceCard service={service} />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
