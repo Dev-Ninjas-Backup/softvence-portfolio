@@ -234,12 +234,20 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Stage: Floating Interactive Service Pills above Big Wordmark */}
-        <div className="relative mt-2 h-[378px] w-full overflow-hidden">
+        {/* Stage: Floating Interactive Service Pills above Big Wordmark.
+            The stage is full-bleed and tall enough that the wordmark's ink
+            is not clipped by the footer's overflow. */}
+        <div
+          className="relative mt-2 w-[calc(100%+48px)] -mx-6 overflow-hidden sm:w-[calc(100%+96px)] sm:-mx-12 lg:w-[calc(100%+280px)] lg:-mx-[140px] 2xl:w-[calc(100%+590px)] 2xl:-mx-[295px]"
+          style={{ height: "calc(378px + 0.32 * clamp(72px, 13.5vw, 242px))" }}
+        >
           {/* Big SOFTVENCE Wordmark with Green 'T' and Figma gradient */}
-          <div className="pointer-events-none absolute bottom-0 left-1/2 w-full -translate-x-1/2 text-center select-none">
+          <div
+            className="pointer-events-none absolute left-1/2 w-full -translate-x-1/2 text-center text-[clamp(72px,13.5vw,242px)] select-none"
+            style={{ bottom: "0.28em" }}
+          >
             <span
-              className="inline-block font-manrope text-[clamp(72px,13.5vw,242px)] font-bold tracking-[-0.01em] uppercase leading-[0.92]"
+              className="inline-block font-manrope leading-[0.92] font-bold tracking-[-0.01em] whitespace-nowrap uppercase"
               style={{
                 background:
                   "linear-gradient(180deg, rgba(255, 255, 255, 1) 25%, rgba(139, 139, 139, 0.6) 69%)",
