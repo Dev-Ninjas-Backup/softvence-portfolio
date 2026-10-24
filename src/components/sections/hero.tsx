@@ -224,7 +224,7 @@ export function Hero() {
   return (
     <section
       id="home"
-      className="relative overflow-hidden bg-white pt-[72px] pb-[72px] lg:pt-[110px] lg:pb-[110px] xl:pt-[150px] xl:pb-[150px]"
+      className="relative overflow-hidden bg-white pt-[72px] pb-[56px] lg:pt-[110px] lg:pb-[88px] xl:pt-[150px] xl:pb-[112px]"
     >
       <div className="page-container">
         <div className="content-1480 flex flex-col gap-[28px] xl:gap-[45px]">

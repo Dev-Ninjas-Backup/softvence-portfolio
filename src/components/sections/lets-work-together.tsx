@@ -31,7 +31,7 @@ const STATS: StatItem[] = [
 
 export function LetsWorkTogether() {
   return (
-    <section id="contact" className="overflow-hidden bg-white py-[100px] lg:py-[140px]">
+    <section id="contact" className="overflow-hidden bg-white py-[80px] lg:py-[112px]">
       <div className="page-container">
         <div className="content-1480 flex flex-col items-center gap-[64px]">
           {/* Header */}
@@ -57,7 +57,7 @@ export function LetsWorkTogether() {
 
             {/* CTA Button Component */}
             <div className="mt-[28px]">
-              <CtaButton href="#contact" variant="outline">
+              <CtaButton overlay variant="outline">
                 Become a Client
               </CtaButton>
             </div>

@@ -242,6 +242,56 @@
   animation: chip-bob 4.5s ease-in-out infinite;
 }
 
+/* CTA modal help chips. One 3.5s boomerang; each chip peaks at a different beat. */
+@keyframes cta-help-0 {
+  0%, 8%, 25.14%, 100% { transform: scale(1); }
+  16.57% { transform: scale(1.04); }
+}
+@keyframes cta-help-1 {
+  0%, 25.34%, 42.49%, 100% { transform: scale(1); }
+  33.91% { transform: scale(1.04); }
+}
+@keyframes cta-help-2 {
+  0%, 42.6%, 59.74%, 100% { transform: scale(1); }
+  51.17% { transform: scale(1.04); }
+}
+@keyframes cta-help-3 {
+  0%, 60.06%, 77.2%, 100% { transform: scale(1); }
+  68.63% { transform: scale(1.04); }
+}
+@keyframes cta-help-4 {
+  0%, 82.57%, 99.71%, 100% { transform: scale(1); }
+  91.14% { transform: scale(1.04); }
+}
+@keyframes cta-help-5 {
+  0%, 65.14%, 82.29%, 100% { transform: scale(1); }
+  73.71% { transform: scale(1.04); }
+}
+@keyframes cta-help-6 {
+  0%, 17.43%, 34.57%, 100% { transform: scale(1); }
+  26% { transform: scale(1.04); }
+}
+@keyframes cta-help-7 {
+  0%, 17.14%, 100% { transform: scale(1); }
+  8.57% { transform: scale(1.04); }
+}
+
+.cta-help-pulse {
+  animation-duration: 3.5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.cta-help-pulse-0 { animation-name: cta-help-0; }
+.cta-help-pulse-1 { animation-name: cta-help-1; }
+.cta-help-pulse-2 { animation-name: cta-help-2; }
+.cta-help-pulse-3 { animation-name: cta-help-3; }
+.cta-help-pulse-4 { animation-name: cta-help-4; }
+.cta-help-pulse-5 { animation-name: cta-help-5; }
+.cta-help-pulse-6 { animation-name: cta-help-6; }
+.cta-help-pulse-7 { animation-name: cta-help-7; }
+
 /* Hero deck entrance (spread-v2). Center lands first. Side cards then leave
    from behind it: left cards travel left, right cards travel right.
    `--hero-from-x` cancels the parent slot offset, so each card starts centered. */
@@ -385,6 +435,7 @@
   .drift-b,
   .drift-streak,
   .chip-bob,
+  .cta-help-pulse,
   .hero-deck-in,
   .about-trust-float,
   .about-hero-orb,

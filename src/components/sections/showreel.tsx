@@ -71,9 +71,15 @@ function showreelFrame(viewportWidth: number, viewportHeight: number, progress: 
   const maxHeight = viewportHeight * 0.86;
   if (openHeight > maxHeight) openHeight = maxHeight;
   const t = smoothstep(progress);
+  const height = closed.h + (openHeight - closed.h) * t;
+  const centered = (viewportHeight - height) / 2;
+  // Closed title stays centered. As the frame opens it settles down so a
+  // medium gap, owned by the card row, is all that remains underneath.
+  const pad = centered + (viewportHeight - height - centered) * t;
   return {
     width: closed.w + (openWidth - closed.w) * t,
-    height: closed.h + (openHeight - closed.h) * t,
+    height,
+    pad,
     wordOpacity: 1 - smoothstep(clamp((t - 0.32) / 0.38, 0, 1)),
   };
 }
@@ -84,21 +90,40 @@ function pageGutter(viewportWidth: number) {
   return 20;
 }
 
+const CARD_HEIGHT = 610;
+
+/** Split the free viewport around the cards: a bit more above, medium below. */
+function cardInsets(viewportHeight: number) {
+  const free = Math.max(0, viewportHeight - CARD_HEIGHT);
+  const below = Math.round(Math.min(128, Math.max(80, free * 0.4)));
+  const above = Math.max(0, free - below);
+  return { above, below };
+}
+
 function ProjectStrip() {
   const trackRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
   const [motionless, setMotionless] = useState(false);
 
   useEffect(() => {
     const track = trackRef.current;
+    const stage = stageRef.current;
     const row = rowRef.current;
-    if (!track || !row) return;
+    if (!track || !stage || !row) return;
+
+    const place = () => {
+      const { above, below } = cardInsets(window.innerHeight);
+      stage.style.paddingTop = `${above}px`;
+      stage.style.paddingBottom = `${below}px`;
+    };
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) {
       const gutter = `${pageGutter(document.documentElement.clientWidth)}px`;
       row.style.paddingLeft = gutter;
       row.style.paddingRight = gutter;
+      place();
       setMotionless(true);
       return;
     }
@@ -121,6 +146,7 @@ function ProjectStrip() {
       }
       const progress = maxShift === 0 ? 0 : clamp(-track.getBoundingClientRect().top / maxShift, 0, 1);
       row.style.transform = `translate3d(${-maxShift * progress}px,0,0)`;
+      place();
     };
 
     const onScroll = () => {
@@ -139,12 +165,13 @@ function ProjectStrip() {
   }, []);
 
   return (
-    <div ref={trackRef} className="relative mt-[88px]">
+    <div ref={trackRef} className="relative">
       <div
+        ref={stageRef}
         className={
           motionless
             ? "overflow-x-auto"
-            : "sticky top-0 flex h-[100svh] items-center overflow-x-clip"
+            : "sticky top-0 flex h-[100svh] items-start overflow-x-clip"
         }
       >
         <div ref={rowRef} className="flex w-max gap-[32px] will-change-transform">
@@ -163,6 +190,7 @@ function ShowreelTitle() {
   const [frame, setFrame] = useState<{
     width: number;
     height: number;
+    pad: number;
     wordOpacity: number;
   } | null>(null);
   const [motionless, setMotionless] = useState(false);
@@ -229,9 +257,10 @@ function ShowreelTitle() {
       <div
         className={
           motionless
-            ? "flex w-full items-center overflow-x-clip py-16"
-            : "sticky top-0 flex h-[100svh] w-full items-center overflow-x-clip"
+            ? "flex w-full items-center overflow-x-clip pt-16 pb-4"
+            : `sticky top-0 flex h-[100svh] w-full overflow-x-clip ${frame ? "items-start" : "items-center"}`
         }
+        style={frame && !motionless ? { paddingTop: frame.pad } : undefined}
       >
         <div className="grid w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center">
           <span
@@ -270,7 +299,7 @@ function ShowreelTitle() {
 
 export function Showreel() {
   return (
-    <section id="projects" className="bg-surface pb-[140px]">
+    <section id="projects" className="bg-surface pb-16">
       <div className="flex flex-col">
         <ShowreelTitle />
         <ProjectStrip />

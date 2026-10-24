@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { ArrowUpRight } from "@/components/ui/arrow-up-right";
+import { useCtaModal } from "@/components/ui/cta-modal";
 import { RiseText } from "@/components/ui/rise-text";
 
 type Service = {
@@ -134,6 +135,7 @@ function ServiceTitle({ title }: { title: string }) {
 }
 
 function ServiceCard({ service }: { service: Service }) {
+  const { open } = useCtaModal();
   const { img } = service;
 
   return (
@@ -183,9 +185,10 @@ function ServiceCard({ service }: { service: Service }) {
                     "linear-gradient(90deg, #00ab0c 0%, rgba(204, 204, 204, 0.28) 100%)",
                 }}
               />
-              <a
-                href="#contact"
-                className="flex cursor-pointer items-center justify-between text-ink-3 transition-colors duration-200 hover:text-brand"
+              <button
+                type="button"
+                onClick={open}
+                className="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent p-0 text-left font-inherit text-ink-3 transition-colors duration-200 hover:text-brand"
               >
                 <span className="text-[18px] leading-[32.43px] font-medium">
                   Talk to Our Experts
@@ -193,7 +196,7 @@ function ServiceCard({ service }: { service: Service }) {
                 <span className="flex size-[34px] items-center justify-center transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
                   <ArrowUpRight className="size-[15px]" />
                 </span>
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -260,7 +263,7 @@ export function Services() {
   }, []);
 
   return (
-    <section id="services" className="bg-white py-[140px]">
+    <section id="services" className="bg-white py-[88px] lg:py-[112px]">
       <div className="flex flex-col gap-[40px]">
         <header className="page-container flex flex-col gap-[30px] pb-[24px]">
           {/* Per-character fills: "//" #00ab0c, "  Services" #171717 */}

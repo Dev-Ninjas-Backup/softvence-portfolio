@@ -260,7 +260,7 @@ export function OurProcess() {
   const CurrentIcon = currentStep.Icon;
 
   return (
-    <section id="our-process" className="relative w-full overflow-hidden bg-[#F6F8F6] py-[100px] lg:py-[140px]" style={{ minHeight: 1126 }}>
+    <section id="our-process" className="relative w-full overflow-hidden bg-[#F6F8F6] py-[80px] lg:py-[112px]" style={{ minHeight: 1126 }}>
       <div className="page-container">
         <div className="relative mx-auto h-[846px] w-[1480px] shrink-0">
           <span className="absolute left-0 top-0 text-[14px] font-semibold leading-[20px] tracking-[1.12px] whitespace-pre text-[#171717] uppercase">

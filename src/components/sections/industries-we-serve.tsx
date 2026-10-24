@@ -176,7 +176,7 @@ function IndustryCard({ industry }: { industry: Industry }) {
 
 export function IndustriesWeServe() {
   return (
-    <section id="industries" className="bg-white py-[140px]">
+    <section id="industries" className="bg-white py-[88px] lg:py-[112px]">
       <div className="page-container">
         <div className="content-1480 flex flex-col gap-[64px]">
           {/* Header */}
@@ -214,7 +214,7 @@ export function IndustriesWeServe() {
                 Let&apos;s build the right solution for your business.
               </p>
             </div>
-            <CtaButton href="#contact">Talk to Our Experts</CtaButton>
+            <CtaButton overlay>Talk to Our Experts</CtaButton>
           </div>
           </Reveal>
         </div>

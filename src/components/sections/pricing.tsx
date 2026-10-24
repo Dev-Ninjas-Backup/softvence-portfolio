@@ -2,6 +2,7 @@
 
 import { useState, type ComponentType } from "react";
 import Image from "next/image";
+import { useCtaModal } from "@/components/ui/cta-modal";
 
 /* ------------------------------------------------------------------ */
 /*  Tab icons (exact Figma vectors)                                   */
@@ -227,6 +228,7 @@ function TabSwitcher({
 }
 
 function PricingCard({ plan }: { plan: PlanData }) {
+  const { open } = useCtaModal();
   return (
     <article
       className="relative shrink-0 overflow-hidden rounded-[24px] border border-line bg-white shadow-[0_1px_2px_rgba(15,26,15,0.04),0_16px_40px_-8px_rgba(15,26,15,0.06)]"
@@ -322,9 +324,10 @@ function PricingCard({ plan }: { plan: PlanData }) {
         </span>
 
         {/* CTA button at y=383.51, height 55.89px, width 425.28px */}
-        <a
-          href="#contact"
-          className="group absolute flex items-center justify-center rounded-[16px] bg-brand transition-all duration-300 hover:bg-brand-deep hover:shadow-[0_8px_24px_rgba(0,171,12,0.3)]"
+        <button
+          type="button"
+          onClick={open}
+          className="group absolute flex cursor-pointer items-center justify-center rounded-[16px] border-0 bg-brand font-inherit transition-all duration-300 hover:bg-brand-deep hover:shadow-[0_8px_24px_rgba(0,171,12,0.3)]"
           style={{ left: 44, top: 383.5, width: 425.3, height: 55.9 }}
         >
           <span className="text-[19.35px] font-bold leading-[25.15px] tracking-[-0.0178em] text-white uppercase">
@@ -336,7 +339,7 @@ function PricingCard({ plan }: { plan: PlanData }) {
               <img src="/figma/765-6639.svg" alt="" className="size-full" />
             </span>
           </span>
-        </a>
+        </button>
       </div>
     </article>
   );
@@ -365,7 +368,7 @@ export function Pricing() {
   const activePlan = PLANS[activeIdx];
 
   return (
-    <section id="pricing" className="overflow-hidden bg-surface py-[100px] lg:py-[140px]">
+    <section id="pricing" className="overflow-hidden bg-surface py-[80px] lg:py-[112px]">
       <div className="page-container">
         <div className="content-1480 flex flex-col items-center">
           {/* Header */}

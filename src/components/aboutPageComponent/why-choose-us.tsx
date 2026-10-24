@@ -27,7 +27,7 @@ export function WhyChooseUs() {
               </h2>
             </Reveal>
             <Reveal delay={120}>
-              <CtaButton href="#contact">Talk to Our Experts</CtaButton>
+              <CtaButton overlay>Talk to Our Experts</CtaButton>
             </Reveal>
           </div>
 

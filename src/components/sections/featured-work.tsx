@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { CtaButton } from "@/components/ui/cta-button";
+import { CtaModalTrigger } from "@/components/ui/cta-modal";
 import { Globe } from "@/components/ui/globe";
 
 const AVATARS = [
@@ -24,7 +25,7 @@ function Stat({ value, unit, className }: { value: string; unit: string; classNa
 
 export function FeaturedWork() {
   return (
-    <section id="work" className="overflow-hidden bg-white py-[100px] lg:py-[140px]">
+    <section id="work" className="overflow-hidden bg-white py-[80px] lg:py-[112px]">
       <div className="page-container">
         <div className="content-1480 flex flex-col gap-[56px]">
           {/* Header */}
@@ -44,7 +45,7 @@ export function FeaturedWork() {
                 powered by strategy, technology, and creative thinking.
               </p>
             </div>
-            <CtaButton href="#contact">Become a Client</CtaButton>
+            <CtaButton overlay>Become a Client</CtaButton>
           </div>
 
           {/* Bento grid */}
@@ -161,7 +162,7 @@ export function FeaturedWork() {
                 <Stat value="5K" unit="+" className="absolute top-[364px] left-[28px]" />
               </div>
 
-              <div className={`relative h-[99px] w-[467px] ${CARD_BORDER}`}>
+              <CtaModalTrigger className={`relative h-[99px] w-[467px] border-0 bg-transparent p-0 font-inherit ${CARD_BORDER}`}>
                 <Image
                   src="/figma/765-4976.svg"
                   alt=""
@@ -175,7 +176,7 @@ export function FeaturedWork() {
                 <span className="absolute top-[28px] left-[400px] flex size-[44px] items-center justify-center rounded-full border-[1.1px] border-black/10">
                   <Image src="/figma/765-4981.svg" alt="" width={22} height={22} />
                 </span>
-              </div>
+              </CtaModalTrigger>
             </div>
           </div>
         </div>

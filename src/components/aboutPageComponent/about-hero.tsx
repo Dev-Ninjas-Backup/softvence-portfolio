@@ -61,7 +61,7 @@ export function AboutHero() {
 
               <Reveal delay={240}>
                 <div className="mt-[47px]">
-                  <CtaButton href="#contact">Become a Client</CtaButton>
+                  <CtaButton overlay>Become a Client</CtaButton>
                 </div>
               </Reveal>
             </div>

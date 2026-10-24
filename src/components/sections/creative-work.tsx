@@ -83,7 +83,7 @@ function ProjectCard({ project }: { project: Project }) {
 
 export function CreativeWork() {
   return (
-    <section id="creative-work" className="overflow-hidden bg-white py-[100px] lg:py-[140px]">
+    <section id="creative-work" className="overflow-hidden bg-white py-[80px] lg:py-[112px]">
       <div className="page-container">
         <div className="content-1480 flex flex-col gap-14">
           <div className="flex w-full flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">

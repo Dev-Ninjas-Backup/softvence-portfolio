@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
+import { CtaModalProvider } from "@/components/ui/cta-modal";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -18,7 +19,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${manrope.variable} h-full`}>
       <body className="min-h-full flex flex-col bg-white antialiased">
-        {children}
+        <CtaModalProvider>{children}</CtaModalProvider>
       </body>
     </html>
   );
