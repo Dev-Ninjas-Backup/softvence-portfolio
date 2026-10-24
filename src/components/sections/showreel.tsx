@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 /** Nine project cards, in the order Figma renders them. */
 const CARD_IMAGES = [
@@ -48,31 +51,152 @@ function ProjectCard({ src }: { src: string }) {
   );
 }
 
-export function Showreel() {
+const CLOSED = { w: 421, h: 118 };
+const CLOSED_COMPACT = { w: 168, h: 64 };
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function smoothstep(value: number) {
+  const t = clamp(value, 0, 1);
+  return t * t * (3 - 2 * t);
+}
+
+function showreelFrame(viewportWidth: number, viewportHeight: number, progress: number) {
+  const compact = viewportWidth < 1024;
+  const closed = compact ? CLOSED_COMPACT : CLOSED;
+  const openWidth = viewportWidth;
+  let openHeight = openWidth * (1080 / 1920);
+  const maxHeight = viewportHeight * 0.86;
+  if (openHeight > maxHeight) openHeight = maxHeight;
+  const t = smoothstep(progress);
+  return {
+    width: closed.w + (openWidth - closed.w) * t,
+    height: closed.h + (openHeight - closed.h) * t,
+    wordOpacity: 1 - smoothstep(clamp((t - 0.32) / 0.38, 0, 1)),
+  };
+}
+
+function ShowreelTitle() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [frame, setFrame] = useState<{
+    width: number;
+    height: number;
+    wordOpacity: number;
+  } | null>(null);
+  const [motionless, setMotionless] = useState(false);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    const video = videoRef.current;
+    if (!track || !video) return;
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let raf = 0;
+
+    const apply = (progress: number) => {
+      setFrame(
+        showreelFrame(document.documentElement.clientWidth, window.innerHeight, progress),
+      );
+      if (reduce) return;
+      if (progress > 0.02) {
+        if (video.paused) void video.play().catch(() => undefined);
+      } else if (!video.paused) {
+        video.pause();
+      }
+    };
+
+    if (reduce) {
+      setMotionless(true);
+      apply(1);
+      return;
+    }
+
+    const update = () => {
+      const rect = track.getBoundingClientRect();
+      const travel = track.offsetHeight - window.innerHeight;
+      const lead = window.innerHeight * 0.35;
+      const progress = travel <= 0 ? 1 : clamp((-rect.top + lead) / (travel + lead), 0, 1);
+      apply(progress);
+    };
+
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  const wordStyle = frame ? { opacity: frame.wordOpacity } : undefined;
+  const mediaStyle = frame
+    ? { width: frame.width, height: frame.height }
+    : undefined;
+
   return (
-    <section id="projects" className="bg-surface py-[140px]">
-      <div className="flex flex-col items-center gap-[88px]">
-        {/* Showreel title */}
-        <div className="flex items-center gap-[40px]">
-          <span className="text-[96px] leading-[104px] font-semibold tracking-[-0.03em] text-ink-2 uppercase">
+    <div
+      ref={trackRef}
+      className={motionless ? "relative w-full" : "relative h-[165vh] w-full lg:h-[190vh]"}
+    >
+      <div
+        className={
+          motionless
+            ? "flex w-full items-center overflow-x-clip py-16"
+            : "sticky top-0 flex h-[100svh] w-full items-center overflow-x-clip"
+        }
+      >
+        <div className="grid w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center">
+          <span
+            style={wordStyle}
+            className="justify-self-end pr-4 text-[32px] leading-none font-medium whitespace-nowrap text-black uppercase sm:text-[56px] lg:pr-10 lg:text-[80px] lg:leading-[109px]"
+          >
             2026
           </span>
-          <span className="relative block h-[118px] w-[421px] overflow-hidden rounded-[20px]">
-            <Image
-              src="/figma/765-6248.png"
-              alt=""
-              width={421}
-              height={421}
-              className="absolute -top-[152px] left-0"
+          <div
+            style={mediaStyle}
+            className="relative z-10 h-[64px] w-[168px] overflow-hidden rounded-[20px] lg:h-[118px] lg:w-[421px]"
+          >
+            <video
+              ref={videoRef}
+              src="/figma/showreel.mp4"
+              poster="/figma/showreel-welcome.png"
+              muted
+              playsInline
+              loop
+              preload="metadata"
+              aria-label="Softvence showreel"
+              className="absolute inset-0 h-full w-full object-cover object-center"
             />
-          </span>
-          <span className="text-[96px] leading-[104px] font-semibold tracking-[-0.03em] text-ink-2 uppercase">
+          </div>
+          <span
+            style={wordStyle}
+            className="justify-self-start pl-4 text-[32px] leading-none font-medium whitespace-nowrap text-black uppercase sm:text-[56px] lg:pl-10 lg:text-[80px] lg:leading-[109px]"
+          >
             Showreels
           </span>
         </div>
+      </div>
+    </div>
+  );
+}
+
+export function Showreel() {
+  return (
+    <section id="projects" className="bg-surface pb-[140px]">
+      <div className="flex flex-col">
+        <ShowreelTitle />
 
         {/* Project cards strip */}
-        <div className="relative w-full overflow-hidden">
+        <div className="relative mt-[88px] w-full overflow-hidden">
           <div className="page-container">
             <div className="flex w-max gap-[32px]">
               {CARD_IMAGES.map((src) => (
