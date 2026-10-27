@@ -368,35 +368,43 @@
   --hero-from-x: -359px;
 }
 
+/* Figma 792:2340 — y 78 → 0 over 2s, hold, then reverse. */
 @keyframes about-trust-float {
-  0%,
-  100% {
-    transform: translateY(18px);
+  0% {
+    transform: translateY(78px);
+    animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
   }
-  12.5%,
-  50% {
+  25% {
+    transform: translateY(0);
+    animation-timing-function: linear;
+  }
+  100% {
     transform: translateY(0);
   }
 }
 
 .about-trust-float {
-  animation: about-trust-float 4s ease-out infinite;
+  animation: about-trust-float 2s infinite alternate;
 }
 
-@keyframes about-hero-orb {
-  0%,
+/* Figma I792:2324;271:1282 — 24° tilt, ease-out through 64.69%, then hold, then reverse. */
+@keyframes about-cta-arrow {
+  0% {
+    transform: rotate(-24deg);
+    animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+  }
+  64.69% {
+    transform: rotate(0deg);
+    animation-timing-function: linear;
+  }
   100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.86;
+    transform: rotate(0deg);
   }
 }
 
-.about-hero-orb {
-  animation: about-hero-orb 7s ease-in-out infinite;
+.about-cta-arrow {
+  animation: about-cta-arrow 2s infinite alternate;
+  transform-origin: center;
 }
 
 @keyframes about-digit-roll {
@@ -453,7 +461,7 @@
   .cta-help-pulse,
   .hero-deck-in,
   .about-trust-float,
-  .about-hero-orb,
+  .about-cta-arrow,
   .about-digit.is-playing span,
   .testimonial-swap {
     animation: none;
