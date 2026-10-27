@@ -12,6 +12,8 @@ type CtaButtonProps = {
   variant?: "outline" | "solid";
   /** Open the CTA modal overlay instead of navigating. */
   overlay?: boolean;
+  /** Gentle arrow tilt from the About hero motion (Figma 792:2324). */
+  arrowMotion?: boolean;
 };
 
 /**
@@ -24,6 +26,7 @@ export function CtaButton({
   className = "",
   variant = "outline",
   overlay = false,
+  arrowMotion = false,
 }: CtaButtonProps) {
   const { open } = useCtaModal();
   const solid = variant === "solid";
@@ -41,7 +44,9 @@ export function CtaButton({
         {children}
       </span>
       <span className="flex size-14 items-center justify-center rounded-full bg-brand text-white transition-colors duration-300 group-hover:bg-brand-deep">
-        <ArrowUpRight className="size-[15px] transition-transform duration-300 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]" />
+        <span className={arrowMotion ? "about-cta-arrow inline-flex" : "inline-flex"}>
+          <ArrowUpRight className="size-[15px] transition-transform duration-300 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]" />
+        </span>
       </span>
     </>
   );
