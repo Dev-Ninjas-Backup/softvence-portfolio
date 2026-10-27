@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ComponentType } from "react";
+import { useEffect, useRef, useState, type ComponentType } from "react";
 
 function IconDiscover({ className }: { className?: string }) {
   return (
@@ -122,6 +122,8 @@ const STEPS: Step[] = [
     connector: [1335, 352],
   },
 ];
+
+const DWELL_MS = 3000;
 
 const WAVE_PATH =
   "M0 62C140 62 155 1 295 1s155 61 295 61 155-61 295-61 155 61 295 61 155-61 295-61h5";
@@ -256,11 +258,58 @@ function StepNode({
 
 export function OurProcess() {
   const [activeIdx, setActiveIdx] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const activeRef = useRef(0);
+  const elapsedRef = useRef(0);
+  const inViewRef = useRef(false);
   const currentStep = STEPS[activeIdx];
   const CurrentIcon = currentStep.Icon;
 
+  const select = (index: number) => {
+    activeRef.current = index;
+    elapsedRef.current = 0;
+    setActiveIdx(index);
+  };
+
+  useEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const section = sectionRef.current;
+    const observer = new IntersectionObserver(([entry]) => {
+      inViewRef.current = entry.isIntersecting;
+    });
+    if (section) observer.observe(section);
+    if (reduced) return () => observer.disconnect();
+
+    let frame = 0;
+    let last = performance.now();
+    const loop = (now: number) => {
+      const playing = inViewRef.current && !document.hidden;
+      if (playing) {
+        elapsedRef.current += now - last;
+        if (elapsedRef.current >= DWELL_MS) {
+          elapsedRef.current = 0;
+          const next = (activeRef.current + 1) % STEPS.length;
+          activeRef.current = next;
+          setActiveIdx(next);
+        }
+      }
+      last = now;
+      frame = requestAnimationFrame(loop);
+    };
+    frame = requestAnimationFrame(loop);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, []);
+
   return (
-    <section id="our-process" className="relative w-full overflow-hidden bg-[#F6F8F6] py-[80px] lg:py-[112px]" style={{ minHeight: 1126 }}>
+    <section
+      ref={sectionRef}
+      id="our-process"
+      className="relative w-full overflow-hidden bg-[#F6F8F6] py-[80px] lg:py-[112px]"
+      style={{ minHeight: 1126 }}
+    >
       <div className="page-container">
         <div className="relative mx-auto h-[846px] w-[1480px] shrink-0">
           <span className="absolute left-0 top-0 text-[14px] font-semibold leading-[20px] tracking-[1.12px] whitespace-pre text-[#171717] uppercase">
@@ -288,7 +337,7 @@ export function OurProcess() {
               key={step.n}
               step={step}
               active={i === activeIdx}
-              onSelect={() => setActiveIdx(i)}
+              onSelect={() => select(i)}
             />
           ))}
           {STEPS.map((step, i) => (
@@ -296,7 +345,7 @@ export function OurProcess() {
               key={step.n}
               step={step}
               active={i === activeIdx}
-              onSelect={() => setActiveIdx(i)}
+              onSelect={() => select(i)}
             />
           ))}
 
@@ -322,7 +371,7 @@ export function OurProcess() {
                 <button
                   key={s.n}
                   type="button"
-                  onClick={() => setActiveIdx(i)}
+                  onClick={() => select(i)}
                   aria-label={`Jump to Step ${s.n}`}
                   className={`cursor-pointer rounded-[5.36px] transition-all duration-300 ${
                     i === activeIdx
