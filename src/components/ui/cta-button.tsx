@@ -14,6 +14,8 @@ type CtaButtonProps = {
   overlay?: boolean;
   /** Gentle arrow tilt from the About hero motion (Figma 792:2324). */
   arrowMotion?: boolean;
+  /** Render a button instead of a link. */
+  onClick?: () => void;
 };
 
 /**
@@ -27,6 +29,7 @@ export function CtaButton({
   variant = "outline",
   overlay = false,
   arrowMotion = false,
+  onClick,
 }: CtaButtonProps) {
   const { open } = useCtaModal();
   const solid = variant === "solid";
@@ -51,9 +54,13 @@ export function CtaButton({
     </>
   );
 
-  if (overlay) {
+  if (overlay || onClick) {
     return (
-      <button type="button" onClick={open} className={`border-0 bg-transparent p-0 font-inherit ${classes}`}>
+      <button
+        type="button"
+        onClick={onClick ?? open}
+        className={`border-0 bg-transparent p-0 font-inherit ${classes}`}
+      >
         {body}
       </button>
     );

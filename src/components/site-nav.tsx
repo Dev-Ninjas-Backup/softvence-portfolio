@@ -8,8 +8,8 @@ import { CtaButton } from "@/components/ui/cta-button";
 const NAV_ITEMS = [
   { label: "Home", href: "/", match: "/" },
   { label: "About", href: "/about", match: "/about" },
-  { label: "Service", href: "/#services" },
-  { label: "Case Study", href: "/#case-study" },
+  { label: "Service", href: "/service", match: "/service" },
+  { label: "Case Study", href: "/case-study", match: "/case-study" },
   { label: "Project", href: "/#projects" },
   { label: "Career", href: "/#career" },
 ];
