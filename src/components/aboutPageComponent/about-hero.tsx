@@ -4,7 +4,7 @@ import { Reveal } from "@/components/ui/reveal";
 
 export function AboutHero() {
   return (
-    <section className="relative bg-white">
+    <section className="relative overflow-x-clip bg-white">
       {/* Background ambient container matching Figma #792:2298 (designedHeight: 1116px) */}
       <div
         className="relative mx-auto flex w-full max-w-[1920px] flex-col items-center pt-[100px] lg:pt-[110px]"

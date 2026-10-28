@@ -234,47 +234,22 @@ function PricingCard({ plan }: { plan: PlanData }) {
       className="relative shrink-0 overflow-hidden rounded-[24px] border border-line bg-white shadow-[0_1px_2px_rgba(15,26,15,0.04),0_16px_40px_-8px_rgba(15,26,15,0.06)]"
       style={{ width: 974.5, height: 568.2 }}
     >
-      {/* Left side — 4 Features (exact Figma positions & spacing) */}
-      <div className="absolute left-[44px] top-[44px] w-[374px]">
-        {plan.features.map((feature, i) => {
-          const top = i * 124;
-          return (
-            <div key={feature.title}>
-              {i > 0 && (
-                <div
-                  className="absolute left-0 h-[1.07px] bg-line"
-                  style={{ width: 374, top: top - 18.5 }}
-                />
-              )}
-              <div className="absolute left-0" style={{ top }}>
-                {/* Feature Icon (19.35px x 22.57px) */}
-                <span className="absolute left-0 top-[2px] block size-[20px] shrink-0">
-                  <img
-                    src={feature.icon}
-                    alt=""
-                    className="size-full object-contain"
-                  />
-                </span>
-
-                {/* Title (22px / 27.95px, SemiBold) */}
-                <h4
-                  className="absolute left-[30px] top-0 text-[22px] font-semibold leading-[28px] text-ink-2"
-                  style={{ width: 340 }}
-                >
-                  {feature.title}
-                </h4>
-
-                {/* Description (16px / 26px, Regular, #5C635E) */}
-                <p
-                  className="absolute left-[30px] top-[39px] text-[16px] leading-[26px] text-[#5C635E]"
-                  style={{ width: 359 }}
-                >
-                  {feature.desc}
-                </p>
+      {/* Left side — features stack so a wrapping title cannot cover its description */}
+      <div className="absolute top-[44px] left-[44px] flex w-[390px] flex-col">
+        {plan.features.map((feature, i) => (
+          <div key={feature.title}>
+            {i > 0 && <div className="my-[18px] h-[1.07px] w-[374px] bg-line" />}
+            <div className="flex items-start gap-[10px]">
+              <span className="mt-[4px] block size-[20px] shrink-0">
+                <img src={feature.icon} alt="" className="size-full object-contain" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <h4 className="text-[22px] leading-[28px] font-semibold text-ink-2">{feature.title}</h4>
+                <p className="mt-[8px] text-[16px] leading-[26px] text-[#5C635E]">{feature.desc}</p>
               </div>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
 
       {/* Vertical divider at x=461.11, width 1.07px, height 480px */}
